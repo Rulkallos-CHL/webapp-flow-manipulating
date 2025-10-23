@@ -9,21 +9,22 @@
     <style>
         /* Set font and ensure the body fills the viewport */
         body { 
-            /* Changed font to Segoe UI as requested for a clean, professional look */
+            /* Font: Segoe UI */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f7fafc; /* light gray */
         }
         /* Style the video and canvas to overlay perfectly */
         .video-container {
             position: relative;
-            /* Use flex-grow for responsiveness but set a max size */
+            /* Use flex-grow for responsiveness */
             flex-grow: 1;
-            max-width: 650px; /* Adjust max width for desktop view */
+            /* No max-width here; let the main-content max-width control the space */
             margin-bottom: 1rem; /* Space below video on small screens */
             
-            /* The following ensures the aspect ratio is maintained in the flex layout */
+            /* CRITICAL: Placeholder for intrinsic aspect ratio control. 
+               The JS will overwrite this with the actual camera ratio. */
             height: 0;
-            padding-bottom: 75%; /* Assuming a 4:3 aspect ratio if video metadata isn't ready */
+            padding-bottom: 75%; 
         }
         #webcam, #canvas {
             position: absolute;
@@ -43,7 +44,8 @@
             flex-direction: column; /* Default stack on mobile */
             gap: 1.5rem;
             width: 100%;
-            max-width: 1000px; /* Overall max width */
+            /* *** CHANGE: Set overall max width to 90% of viewport width *** */
+            max-width: 90vw; 
             margin: 0 auto;
         }
 
@@ -61,7 +63,7 @@
 <body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen p-4">
 
     <!-- Header -->
-    <header class="text-center mb-8 w-full max-w-4xl">
+    <header class="text-center mb-8 w-full max-w-[90vw]">
         <h1 class="text-4xl font-extrabold text-indigo-800">Live Traffic Counter System</h1>
         <p class="text-gray-600 mt-2 text-lg">Real-time face detection and zone crossing analytics.</p>
     </header>
@@ -131,7 +133,6 @@
         const statusMessage = document.getElementById("status-message");
         const statusText = document.getElementById("status-text");
         const detectionCount = document.getElementById("detection-count");
-        // Removed videoContainer query here, using the newly styled wrapper
         const enterCountElement = document.getElementById("enter-count");
         const exitCountElement = document.getElementById("exit-count");
 
@@ -224,7 +225,7 @@
                     // Find the video container (parent) to set its height based on width for correct aspect ratio
                     const videoContainer = webcamElement.closest('.video-container');
                     if (videoContainer) {
-                        // Use padding-bottom trick for intrinsic aspect ratio control
+                        // *** Ensures the correct native camera ratio is used for the container ***
                         videoContainer.style.paddingBottom = `${(videoHeight / videoWidth) * 100}%`;
                     }
                     
